@@ -1,33 +1,22 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_application_5/Components/my_custom_widget.dart';
+import 'package:flutter_application_5/Screens/cubit/input_cubit.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import '../Components/my_custom_widgets.dart';
+// import '../Components/my_custom_widgets.dart';
 import '../Components/icon_content.dart';
 import '../Components/my_constants.dart';
 import '../Components/my_round_icon_button.dart';
 import 'result_page.dart';
 import '../Components/my_bottom_bar.dart';
-// ignore: depend_on_referenced_packages
 import 'package:flutter_application_5/Components/bmi_calculator.dart';
 
 enum Gender { male, female }
 
-class InputPage extends StatefulWidget {
-  @override
-  _InputPageState createState() => _InputPageState();
-}
-
-class _InputPageState extends State<InputPage> {
-  Gender? genderType;
-  int height = 180;
-  int weight = 70;
-  int age = 20;
-
+class InputPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    
-   
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
@@ -44,177 +33,196 @@ class _InputPageState extends State<InputPage> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Expanded(
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: ReuseableWidget(
-                        customColor: genderType == Gender.male
-                            ? kActiveColor
-                            : kInactiveColor,
-                        customchild: IconContent(FontAwesomeIcons.mars, 'Male'),
-                        onPress: () {
-                          setState(() {
-                            genderType = Gender.male;
-                          });
-                        },
-                      ),
-                    ),
-                    Expanded(
-                      child: ReuseableWidget(
-                          customColor: genderType == Gender.female
-                              ? kActiveColor
-                              : kInactiveColor,
-                          customchild:
-                              IconContent(FontAwesomeIcons.venus, 'Female'),
-                          onPress: () {
-                            setState(() {
-                              genderType = Gender.female;
-                            });
-                          }),
-                    )
-                  ],
+                child: BlocBuilder<InputCubit, InputState>(
+                  builder: (context, state) {
+                    return Row(
+                      children: [
+                        Expanded(
+                          child: ReuseableWidget(
+                            customColor: state.genderType1 == Gender.male
+                                ? state.kActiveColor1
+                                : state.kInactiveColor1,
+                            customchild:
+                                IconContent(FontAwesomeIcons.mars, 'Male'),
+                            onPress: () {
+                              context.read<InputCubit>().selGenMale();
+                            },
+                          ),
+                        ),
+                        Expanded(
+                          child: ReuseableWidget(
+                              customColor: state.genderType1 == Gender.female
+                                  ? state.kActiveColor1
+                                  : state.kInactiveColor1,
+                              customchild:
+                                  IconContent(FontAwesomeIcons.venus, 'Female'),
+                              onPress: () {
+                                context.read<InputCubit>().selGenFemale();
+                              }),
+                        )
+                      ],
+                    );
+                  },
                 ),
               ),
               Expanded(
-                child: ReuseableWidget(
-                  customColor: kActiveColor,
-                  customchild: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        'Height',
-                        style: kMyTextStyle,
-                      ),
-                      Row(
+                child: BlocBuilder<InputCubit, InputState>(
+                  builder: (context, state) {
+                    return ReuseableWidget(
+                      customColor: state.kActiveColor1,
+                      customchild: Column(
                         mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.baseline,
-                        textBaseline: TextBaseline.alphabetic,
                         children: [
-                          Text(height.toString(), style: kMyBoldTextStyle),
-                          Text('cm', style: kMyTextStyle)
+                          Text(
+                            'Height',
+                            style: kMyTextStyle,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.baseline,
+                            textBaseline: TextBaseline.alphabetic,
+                            children: [
+                              Text(state.height1.toString(),
+                                  style: kMyBoldTextStyle),
+                              Text('cm', style: kMyTextStyle)
+                            ],
+                          ),
+                          SliderTheme(
+                            data: SliderTheme.of(context).copyWith(
+                                activeTrackColor: Color(0xffff0066),
+                                inactiveTrackColor: Color(0xFF8D8E98),
+                                thumbColor: Color(0xffff3399),
+                                overlayColor: Color(0x299A32CD),
+                                thumbShape: RoundSliderThumbShape(
+                                    enabledThumbRadius: 15.0),
+                                overlayShape:
+                                    RoundSliderOverlayShape(overlayRadius: 30)),
+                            child: Slider(
+                              value: state.height1!.toDouble(),
+                              min: 60,
+                              max: 240,
+                              onChanged:
+                                  context.read<InputCubit>().selectHeight,
+                            ),
+                          )
                         ],
-                      ),
-                      SliderTheme(
-                        data: SliderTheme.of(context).copyWith(
-                            activeTrackColor: Color(0xffff0066),
-                            inactiveTrackColor: Color(0xFF8D8E98),
-                            thumbColor: Color(0xffff3399),
-                            overlayColor: Color(0x299A32CD),
-                            thumbShape:
-                                RoundSliderThumbShape(enabledThumbRadius: 15.0),
-                            overlayShape:
-                                RoundSliderOverlayShape(overlayRadius: 30)),
-                        child: Slider(
-                            value: height.toDouble(),
-                            min: 60,
-                            max: 240,
-                            onChanged: (double newValue) {
-                              setState(() {
-                                height = newValue.round();
-                              });
-                            }),
-                      )
-                    ],
-                  ),
-                ),
-              ),
-              Expanded(
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: ReuseableWidget(
-                          customColor: kActiveColor,
-                          customchild: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                'Weight',
-                                style: kMyTextStyle,
-                              ),
-                              Text(
-                                weight.toString(),
-                                style: kMyBoldTextStyle,
-                              ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  MyRoundIconButton(FontAwesomeIcons.minus, () {
-                                    setState(() {
-                                      weight--;
-                                    });
-                                  }),
-                                  SizedBox(
-                                    width: 10.0,
-                                  ),
-                                  MyRoundIconButton(FontAwesomeIcons.plus, () {
-                                    setState(() {
-                                      weight++;
-                                    });
-                                  })
-                                ],
-                              )
-                            ],
-                          ),
-                          onPress: () {}),
-                    ),
-                    Expanded(
-                      child: ReuseableWidget(
-                          customColor: kActiveColor,
-                          customchild: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                'Age',
-                                style: kMyTextStyle,
-                              ),
-                              Text(
-                                age.toString(),
-                                style: kMyBoldTextStyle,
-                              ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  MyRoundIconButton(FontAwesomeIcons.minus, () {
-                                    setState(() {
-                                      age--;
-                                    });
-                                  }),
-                                  SizedBox(
-                                    width: 10,
-                                  ),
-                                  MyRoundIconButton(FontAwesomeIcons.plus, () {
-                                    setState(() {
-                                      age++;
-                                    });
-                                  })
-                                ],
-                              )
-                            ],
-                          ),
-                          onPress: () {}),
-                    ),
-                  ],
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(left: 6, right: 6, bottom: 5),
-                child: MyBottomBar(
-                  barText: 'Calculate',
-                  onPressed: () {
-                    BMICalculatorBrain calculator =
-                        BMICalculatorBrain(weight: weight, height: height);
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => (ResultPage(
-                          result: calculator.getResult(),
-                          resultText: calculator.bmiResultText(),
-                          advice: calculator.advice(),
-                        )),
                       ),
                     );
                   },
                 ),
+              ),
+              Expanded(
+                child: Row(
+                  children: [
+                    Expanded(
+                      child: BlocBuilder<InputCubit, InputState>(
+                        builder: (context, state) {
+                          return ReuseableWidget(
+                              customColor: state.kActiveColor1,
+                              customchild: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    'Weight',
+                                    style: kMyTextStyle,
+                                  ),
+                                  Text(
+                                    state.weight1.toString(),
+                                    style: kMyBoldTextStyle,
+                                  ),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      MyRoundIconButton(FontAwesomeIcons.minus,
+                                          () {
+                                        context
+                                            .read<InputCubit>()
+                                            .minusWeight();
+                                      }),
+                                      SizedBox(
+                                        width: 10.0,
+                                      ),
+                                      MyRoundIconButton(FontAwesomeIcons.plus,
+                                          () {
+                                        context.read<InputCubit>().plusWeight();
+                                      })
+                                    ],
+                                  )
+                                ],
+                              ),
+                              onPress: () {});
+                        },
+                      ),
+                    ),
+                    Expanded(
+                      child: BlocBuilder<InputCubit, InputState>(
+                        builder: (context, state) {
+                          return ReuseableWidget(
+                              customColor: state.kActiveColor1,
+                              customchild: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    'Age',
+                                    style: kMyTextStyle,
+                                  ),
+                                  Text(
+                                    state.age1.toString(),
+                                    style: kMyBoldTextStyle,
+                                  ),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.center,
+                                    children: [
+                                      MyRoundIconButton(FontAwesomeIcons.minus,
+                                          () {
+                                        context
+                                            .read<InputCubit>()
+                                            .minusSelectAge();
+                                      }),
+                                      SizedBox(
+                                        width: 10,
+                                      ),
+                                      MyRoundIconButton(FontAwesomeIcons.plus,
+                                          () {
+                                        context
+                                            .read<InputCubit>()
+                                            .plusSelectAge();
+                                      })
+                                    ],
+                                  )
+                                ],
+                              ),
+                              onPress: () {});
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              BlocBuilder<InputCubit, InputState>(
+                builder: (context, state) {
+                  return Padding(
+                    padding:
+                        const EdgeInsets.only(left: 6, right: 6, bottom: 5),
+                    child: MyBottomBar(
+                      barText: 'Calculate',
+                      onPressed: () {
+                        BMICalculatorBrain calculator = BMICalculatorBrain(
+                            weight: state.weight1!, height: state.height1!);
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => (ResultPage(
+                              result: calculator.getResult(),
+                              resultText: calculator.bmiResultText(),
+                              advice: calculator.advice(),
+                            )),
+                          ),
+                        );
+                      },
+                    ),
+                  );
+                },
               )
             ],
           ),
@@ -223,6 +231,3 @@ class _InputPageState extends State<InputPage> {
     );
   }
 }
-
-
-
