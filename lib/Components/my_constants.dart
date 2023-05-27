@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
 
 const double kBottomBarheight = 80;
-const Color kActiveColor = Color(0xff222222);
-const Color kInactiveColor = Colors.black12;
 const kMyTextStyle = TextStyle(
   fontSize: 18,
   color: Color(0xFF999999),

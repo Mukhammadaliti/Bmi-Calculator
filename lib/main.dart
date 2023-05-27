@@ -1,6 +1,8 @@
-import 'dart:html';
+// import 'dart:html';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_application_5/Screens/cubit/input_cubit.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'Screens/input_page.dart';
 
 void main() {
@@ -13,7 +15,10 @@ class BMICalculator extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData.dark(),
-      home: InputPage(),
+      home: BlocProvider(
+        create: (context) => InputCubit(),
+        child: InputPage(),
+      ),
     );
   }
 }
