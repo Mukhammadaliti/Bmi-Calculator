@@ -3,7 +3,7 @@ import 'dart:math';
 class BMICalculatorBrain {
   BMICalculatorBrain({required this.weight, required this.height});
 
-  int height;
+  double height;
   int weight;
   double _bmi = 0.0;
 

@@ -65,7 +65,9 @@ class InputPage extends StatelessWidget {
                   },
                 ),
               ),
-              Expanded(
+              SizedBox(
+                height: 200,
+                width: 20,
                 child: BlocBuilder<InputCubit, InputState>(
                   builder: (context, state) {
                     return ReuseableWidget(
@@ -82,7 +84,7 @@ class InputPage extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.baseline,
                             textBaseline: TextBaseline.alphabetic,
                             children: [
-                              Text(state.height1.toString(),
+                              Text(state.height1.toStringAsFixed(0),
                                   style: kMyBoldTextStyle),
                               Text('cm', style: kMyTextStyle)
                             ],
@@ -98,9 +100,9 @@ class InputPage extends StatelessWidget {
                                 overlayShape:
                                     RoundSliderOverlayShape(overlayRadius: 30)),
                             child: Slider(
-                              value: state.height1!.toDouble(),
-                              min: 60,
-                              max: 240,
+                              value: state.height1,
+                              min: 60.0,
+                              max: 240.0,
                               onChanged:
                                   context.read<InputCubit>().selectHeight,
                             ),
@@ -199,31 +201,34 @@ class InputPage extends StatelessWidget {
                   ],
                 ),
               ),
-              BlocBuilder<InputCubit, InputState>(
-                builder: (context, state) {
-                  return Padding(
-                    padding:
-                        const EdgeInsets.only(left: 6, right: 6, bottom: 5),
-                    child: MyBottomBar(
-                      barText: 'Calculate',
-                      onPressed: () {
-                        BMICalculatorBrain calculator = BMICalculatorBrain(
-                            weight: state.weight1!, height: state.height1!);
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => (ResultPage(
-                              result: calculator.getResult(),
-                              resultText: calculator.bmiResultText(),
-                              advice: calculator.advice(),
-                            )),
-                          ),
-                        );
-                      },
-                    ),
-                  );
-                },
-              )
+              BlocProvider(
+                lazy: false,
+                create: (BuildContext context) => InputCubit(),
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 6, right: 6, bottom: 5),
+                  child: BlocBuilder<InputCubit, InputState>(
+                    builder: (context, state) {
+                      return MyBottomBar(
+                        barText: 'Calculate',
+                        onPressed: () {
+                          BMICalculatorBrain calculator = BMICalculatorBrain(
+                              weight: state.weight1, height: state.height1);
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => (ResultPage(
+                                result: calculator.getResult(),
+                                resultText: calculator.bmiResultText(),
+                                advice: calculator.advice(),
+                              )),
+                            ),
+                          );
+                        },
+                      );
+                    },
+                  ),
+                ),
+              ),
             ],
           ),
         ),

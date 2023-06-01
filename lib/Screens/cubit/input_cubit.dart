@@ -10,7 +10,7 @@ class InputCubit extends Cubit<InputState> {
 
   void selectHeight(double newValue) {
     emit(
-      InputState(height1: state.height1 = newValue.round()),
+      state.copyWith(height: state.height1 = newValue),
     );
   }
 
@@ -24,19 +24,19 @@ class InputCubit extends Cubit<InputState> {
 
   void plusWeight() {
     emit(
-      state.copyWith(weight: state.weight1! + 1),
+      state.copyWith(weight: state.weight1 + 1),
     );
   }
 
   void minusWeight() {
-    emit(state.copyWith(weight: state.weight1! - 1));
+    emit(state.copyWith(weight: state.weight1 - 1));
   }
 
   void plusSelectAge() {
-    emit(state.copyWith(age: state.age1! + 1));
+    emit(state.copyWith(age: state.age1 + 1));
   }
 
   void minusSelectAge() {
-    emit(state.copyWith(age: state.age1! - 1));
+    emit(state.copyWith(age: state.age1 - 1));
   }
 }
