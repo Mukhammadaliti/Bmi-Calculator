@@ -201,32 +201,30 @@ class InputPage extends StatelessWidget {
                   ],
                 ),
               ),
-              BlocProvider(
-                lazy: false,
-                create: (BuildContext context) => InputCubit(),
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 6, right: 6, bottom: 5),
-                  child: BlocBuilder<InputCubit, InputState>(
-                    builder: (context, state) {
-                      return MyBottomBar(
-                        barText: 'Calculate',
-                        onPressed: () {
-                          BMICalculatorBrain calculator = BMICalculatorBrain(
-                              weight: state.weight1, height: state.height1);
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => (ResultPage(
-                                result: calculator.getResult(),
-                                resultText: calculator.bmiResultText(),
-                                advice: calculator.advice(),
-                              )),
-                            ),
-                          );
-                        },
-                      );
-                    },
-                  ),
+              Padding(
+                padding: const EdgeInsets.only(left: 6, right: 6, bottom: 5),
+                child: BlocBuilder<InputCubit, InputState>(
+                  builder: (context, state) {
+                    return MyBottomBar(
+                      barText: 'Calculate',
+                      onPressed: () {
+                        BMICalculatorBrain calculator = BMICalculatorBrain();
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (_) => (BlocProvider.value(
+                              value: InputCubit(),
+                              child: ResultPage(
+                                  // result: calculator.getResult(),
+                                  // resultText: calculator.bmiResultText(),
+                                  // advice: calculator.advice(),
+                                  ),
+                            )),
+                          ),
+                        );
+                      },
+                    );
+                  },
                 ),
               ),
             ],
